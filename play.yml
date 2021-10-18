@@ -1,0 +1,64 @@
+---
+- name: TP2.1
+  hosts: router
+  become_user: admin
+  become: yes
+  vars:
+    ansible_become_pass: admin
+  
+
+  tasks: 
+    - name: show version on R1
+      cisco.ios.ios_command:
+        commands: show version
+      register: version
+
+    - name: run backup on R1
+      cisco.ios.ios_config:
+        backup: yes
+
+    - name: Change FastEthernet0/1 IPV4 addr on R1
+      cisco.ios.ios_l3_interfaces:
+        config:
+        - name: FastEthernet0/1
+          ipv4:
+          - address: 20.0.0.1/24
+
+    - name: Up interface FastEthernet0/1 on R1
+      cisco.ios.ios_interfaces:
+        config:
+        - name: FastEthernet0/1
+          description: Configured and Merged by Ansible Network
+          enabled: true
+
+    - name: ACL extended cloud_computing
+      cisco.ios.ios_acls:
+        config:
+        - afi: ipv4
+          acls:
+          - name: cloud_computing
+            acl_type: extended
+            aces:
+            - grant: permit
+              protocol_options:
+                tcp:
+                  ack: true
+              source:
+                address: 10.0.0.0
+                wildcard_bits: 0.0.0.255
+              destination:
+                address: 10.0.0.0
+                wildcard_bits: 0.0.0.255
+                port_protocol:
+                  eq: '22'
+      tags:
+      - acl
+
+    - debug: 
+        var: version.stdout_lines
+
+
+
+
+
+

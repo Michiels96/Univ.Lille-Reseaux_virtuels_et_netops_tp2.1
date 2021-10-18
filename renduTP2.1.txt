@@ -1,0 +1,49 @@
+Rendu TP2.1 Réseau
+Pierre Michiels
+Thierno souleymane Bah
+
+
+Créer un fichier hosts.ini et play.yml
+
+Pour tester le fichier hosts.ini, taper la commande 
+    #ansible all -i hosts.ini -m ping
+
+Pour tester le fichier playbook play.yml, taper la commande 
+    #ansible-playbook -i hosts.ini play.yml 
+
+
+ip access-list extended  cloud_computing
+permit tcp host 10.0.0.0 0.0.0.255 gt 1023 10.0.0.0 0.0.0.255 eq 22
+
+int fa1/1
+ip access-group reseau-secretariat out
+
+
+Configuration du Routeur2:
+    Sur le port FastEthernet0/0:
+    apd. de 'Router>':
+    #enable
+    #configure terminal
+    #interface FastEthernet0/0
+    #ip address 10.0.0.2 255.255.255.0
+    #no shutdown
+    #exit
+
+Config d'ssh:
+    #hostname myRouter2
+    #ip domain name admin
+    #crypto key generate rsa (puis 1024 au lieu de 512)
+    #enable password admin
+    #username admin password admin
+    #ip ssh version 2
+    #line vty 0 15
+    #transport input ssh
+    #login local 
+
+coté client (ubuntu):
+    modifier le fichier ~/.ssh/config
+    et ajouter les lignes suivantes:
+
+Host 10.0.0.2
+  KexAlgorithms +diffie-hellman-group1-sha1
+  Ciphers <cypher compatible avec le système>
