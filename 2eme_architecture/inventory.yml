@@ -1,0 +1,8 @@
+all:
+  children:
+    routers:
+      hosts:
+        r1:
+          ansible_hosts: 10.0.0.1
+        r2:
+          ansible_hosts: 10.0.0.2

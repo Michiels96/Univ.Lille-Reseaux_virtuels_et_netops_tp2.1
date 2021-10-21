@@ -1,0 +1,102 @@
+---
+- name: TP2.1
+  hosts: routers
+  #become_user: admin
+  #become: yes
+  # vars:
+  #   ansible_become_pass: admin
+
+    # cli:
+    #   username: admin
+    #   password: admin
+    # vlans:
+    #   100: vlan_100
+  
+    
+  
+
+  tasks: 
+    # - name: create VLAN to 100 on R1
+    #   cisco.ios.ios_vlans:
+    #     config:
+    #     - name: Vlan_100
+    #       vlan_id: 100
+    #       state: active
+    #       shutdown: disabled
+    #       remote_span: true
+    - name: Show VLAN
+      ios_command:
+        commands: show vlans
+      register: show_vlan
+
+
+    # - name: create VLAN to 100 on R1
+    #   cisco.ios.ios_config:
+    #     provider: '{{cli}}'
+    #     lines:
+    #       - name {{item.value}}
+    #     parents:
+    #       - vlan {{item.key}}
+    #   with_dict: "{{vlans}}"
+
+
+    - name: show version on R1
+      cisco.ios.ios_command:
+        commands: show version
+      register: version
+
+    - name: run backup on R1
+      cisco.ios.ios_config:
+        backup: yes
+
+    - name: Change FastEthernet0/1 IPV4 addr on R1
+      cisco.ios.ios_l3_interfaces:
+        config:
+        - name: "{{name}}"
+          ipv4:
+          - address: "{{ipIntFa0_1}}"
+
+    - name: Change FastEthernet0/0 IPV4 addr on R2
+      cisco.ios.ios_l3_interfaces:
+        config:
+        - name: "{{name}}"
+          ipv4:
+          - address: "{{ipIntFa0_0}}"
+
+    - name: Up interface FastEthernet0/1 on R1 and R2
+      cisco.ios.ios_interfaces:
+        config:
+        - name: "{{name}}"
+          enabled: true
+
+    - name: ACL extended cloud_computing
+      cisco.ios.ios_acls:
+        config:
+        - afi: ipv4
+          acls:
+          - name: cloud_computing
+            acl_type: extended
+            aces:
+            - grant: permit
+              protocol_options:
+                tcp:
+                  ack: true
+              source:
+                address: 10.0.0.0
+                wildcard_bits: 0.0.0.255
+              destination:
+                address: 10.0.0.0
+                wildcard_bits: 0.0.0.255
+                port_protocol:
+                  eq: '22'
+      tags:
+      - acl
+
+    - debug: 
+        var: version.stdout_lines | show_vlan
+
+
+
+
+
+

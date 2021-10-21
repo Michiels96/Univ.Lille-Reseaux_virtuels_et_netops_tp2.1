@@ -1,0 +1,4 @@
+ipIntFa0_1: 20.0.0.1/24
+name: FastEthernet 0/1
+ansible_user: admin 
+ansible_password: admin 

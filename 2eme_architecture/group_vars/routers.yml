@@ -1,0 +1,7 @@
+# sert à garder toutes les variables globales utilisés dans play.yml
+ansible_python_interpreter: /usr/bin/python3
+ansible_connection: ansible.netcommon.network_cli
+ansible_network_os: cisco.ios.ios
+
+ansible_user: admin
+ansible_become: yes

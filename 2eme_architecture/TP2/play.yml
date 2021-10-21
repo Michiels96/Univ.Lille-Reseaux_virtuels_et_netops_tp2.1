@@ -1,0 +1,60 @@
+- name: Launch playbook
+  hosts: routers
+
+  tasks:
+  - name: Get IOS version
+    cisco.ios.ios_command:
+     commands:
+      - show version
+    register: ios_version
+
+  - name: Print IOS Version
+    ansible.builtin.debug:
+     var: ios_version
+
+  - name: Set a Backup
+    cisco.ios.ios_config:
+     backup: yes
+     backup_options:
+      filename: backup.cfg
+  
+  - name: enable interfaces
+    cisco.ios.ios_interfaces:
+     config:
+     - name: "{{name}}"
+       description: Configure FastEthernet 0/1
+       enabled: true
+
+  - name: Add ip address
+    cisco.ios.ios_l3_interfaces:
+     config:
+     - name: "{{name}}"
+       ipv4:
+       - address: "{{ipIntFa0/1}}"
+ 
+  - name: access list
+    become: yes
+    cisco.ios.ios_acls:
+     config:
+     - afi: ipv4
+       acls:
+       - name: "{{acl_name}}"
+         acl_type: extended
+         aces:
+         - grant: permit
+           protocol_options:
+            tcp:
+             syn: true
+           source:
+             address: 10.0.0.0
+             wildcard_bits: 0.0.0.255
+           destination:
+             address: 10.0.0.0
+             wildcard_bits: 0.0.0.255
+             port_protocol:
+               eq: ssh
+           ttl:
+             lt: 20
+     state: overridden
+    tags:
+    - acl

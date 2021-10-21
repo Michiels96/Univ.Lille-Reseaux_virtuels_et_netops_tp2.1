@@ -8,8 +8,11 @@ Créer un fichier hosts.ini et play.yml
 Pour tester le fichier hosts.ini, taper la commande 
     #ansible all -i hosts.ini -m ping
 
-Pour tester le fichier playbook play.yml, taper la commande 
+Pour tester le fichier playbook play.yml, taper la commande (1ere architecture)
     #ansible-playbook -i hosts.ini play.yml 
+
+Pour tester le fichier playbook play.yml, taper la commande (2eme architecture)
+    #ansible-playbook -i inventory.ini play.yml 
 
 
 ip access-list extended  cloud_computing
@@ -25,6 +28,8 @@ Configuration du Routeur2:
     #enable
     #configure terminal
     #interface FastEthernet0/0
+    (100 représente le num. de VLAN)
+    #encapsulation dot1q 100
     #ip address 10.0.0.2 255.255.255.0
     #no shutdown
     #exit
