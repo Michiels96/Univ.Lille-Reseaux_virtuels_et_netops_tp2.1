@@ -12,7 +12,7 @@ Pour tester le fichier playbook play.yml, taper la commande (1ere architecture)
     #ansible-playbook -i hosts.ini play.yml 
 
 Pour tester le fichier playbook play.yml, taper la commande (2eme architecture)
-    #ansible-playbook -i inventory.ini play.yml 
+    #ansible-playbook -i inventory.yml play.yml 
 
 
 ip access-list extended  cloud_computing
