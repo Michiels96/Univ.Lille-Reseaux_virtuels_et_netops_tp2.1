@@ -25,8 +25,9 @@
     #       shutdown: disabled
     #       remote_span: true
     - name: Show VLAN
-      ios_command:
-        commands: show vlans
+      cisco.ios.ios_command:
+        commands: 
+          - show vlans
       register: show_vlan
 
 
@@ -42,7 +43,8 @@
 
     - name: show version on R1
       cisco.ios.ios_command:
-        commands: show version
+        commands: 
+        - show version
       register: version
 
     - name: run backup on R1
@@ -69,12 +71,13 @@
         - name: "{{name}}"
           enabled: true
 
-    - name: ACL extended cloud_computing
+    - name: ACL cloud-computing
+      become: yes
       cisco.ios.ios_acls:
         config:
         - afi: ipv4
           acls:
-          - name: cloud_computing
+          - name: "{{acl_name}}"
             acl_type: extended
             aces:
             - grant: permit
