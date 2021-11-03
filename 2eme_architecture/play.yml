@@ -40,7 +40,6 @@
     #       - vlan {{item.key}}
     #   with_dict: "{{vlans}}"
 
-
     - name: show version on R1
       cisco.ios.ios_command:
         commands: 
@@ -48,25 +47,25 @@
       register: version
 
     - name: run backup on R1
-      cisco.ios.ios_config:
+      ios_config:
         backup: yes
 
     - name: Change FastEthernet0/1 IPV4 addr on R1
-      cisco.ios.ios_l3_interfaces:
+      ios_l3_interfaces:
         config:
         - name: "{{name}}"
           ipv4:
           - address: "{{ipIntFa0_1}}"
 
     - name: Change FastEthernet0/0 IPV4 addr on R2
-      cisco.ios.ios_l3_interfaces:
+      ios_l3_interfaces:
         config:
         - name: "{{name}}"
           ipv4:
           - address: "{{ipIntFa0_0}}"
 
     - name: Up interface FastEthernet0/1 on R1 and R2
-      cisco.ios.ios_interfaces:
+      ios_interfaces:
         config:
         - name: "{{name}}"
           enabled: true
